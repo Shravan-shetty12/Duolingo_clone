@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..models import Unit, UserSkillProgress
+from ..models import Unit, UserSkillProgress, User, Course, UserCourse
 from ..schemas import PathOut, UnitOut, SkillOut
 
 router = APIRouter()
@@ -9,7 +9,16 @@ router = APIRouter()
 
 @router.get("/course/path", response_model=PathOut)
 def get_path(db: Session = Depends(get_db), user_id: int = 1):
-    units = db.query(Unit).order_by(Unit.order_index).all()
+    user = db.query(User).filter_by(id=user_id).first()
+    if not user or not user.active_course_id:
+        raise HTTPException(400, "No active course selected")
+
+    units = (db.query(Unit)
+             .filter_by(course_id=user.active_course_id)
+             .order_by(Unit.order_index).all())
+    if not units:
+        raise HTTPException(404, "No units found for this course")
+
     all_skills = [s for u in units for s in sorted(u.skills, key=lambda s: s.order_index)]
     progress_map = {p.skill_id: p for p in db.query(UserSkillProgress).filter_by(user_id=user_id)}
 
@@ -38,4 +47,4 @@ def get_path(db: Session = Depends(get_db), user_id: int = 1):
         result_units.append(UnitOut(id=unit.id, title=unit.title, color_theme=unit.color_theme,
                                     order_index=unit.order_index, skills=skills_out))
 
-    return PathOut(course_id=units[0].course_id, units=result_units)
+    return PathOut(course_id=user.active_course_id, units=result_units)

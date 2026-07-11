@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine
 from app.models import Base
 from app.seed import seed
-from app.routers import path, lessons, attempts, stats, leaderboard
+from app.routers import path, lessons, attempts, stats, leaderboard, courses
 
 Base.metadata.create_all(bind=engine)
 seed()
@@ -23,6 +23,7 @@ app.include_router(lessons.router, prefix="/api/v1", tags=["lessons"])
 app.include_router(attempts.router, prefix="/api/v1", tags=["attempts"])
 app.include_router(stats.router, prefix="/api/v1", tags=["stats"])
 app.include_router(leaderboard.router, prefix="/api/v1", tags=["leaderboard"])
+app.include_router(courses.router, prefix="/api/v1", tags=["courses"])
 
 
 @app.get("/")

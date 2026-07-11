@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useStatsStore } from "@/lib/store";
 
 const navItems = [
   { href: "/", icon: "🏠", label: "Learn" },
@@ -10,8 +11,11 @@ const navItems = [
 
 export default function MobileNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { activeCourse } = useStatsStore();
   const isLesson = pathname.startsWith("/lesson");
-  if (isLesson) return null;
+  const isChoose = pathname.startsWith("/choose-language");
+  if (isLesson || isChoose) return null;
 
   return (
     <nav style={{
@@ -35,6 +39,17 @@ export default function MobileNav() {
           </Link>
         );
       })}
+      {/* Language switcher tab */}
+      <button onClick={() => router.push("/choose-language")} style={{
+        flex: 1, display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        padding: "10px 4px", background: "none", border: "none",
+        color: "#afafaf", fontWeight: 700, fontSize: "11px", gap: "2px",
+        cursor: "pointer",
+      }}>
+        <span style={{ fontSize: "22px" }}>{activeCourse?.flag_emoji ?? "🌍"}</span>
+        Language
+      </button>
     </nav>
   );
 }

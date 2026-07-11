@@ -10,8 +10,14 @@ async function req<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  getCourses: () => req<import("./types").Course[]>("/courses"),
+  setActiveCourse: (courseId: number) =>
+    req<{ active_course_id: number; language: string; flag: string }>(
+      `/me/course?course_id=${courseId}`, { method: "POST" }
+    ),
   getPath: () => req<import("./types").PathData>("/course/path"),
   getNextLesson: (skillId: number) => req<import("./types").Lesson>(`/lessons/${skillId}/next`),
+  getLesson: (lessonId: number) => req<import("./types").Lesson>(`/lesson/${lessonId}`),
   startAttempt: (lessonId: number) =>
     req<import("./types").Attempt>(`/attempts?lesson_id=${lessonId}`, { method: "POST" }),
   submitAnswer: (attemptId: number, exerciseId: number, answer: string) =>

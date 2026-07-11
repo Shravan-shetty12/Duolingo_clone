@@ -8,10 +8,12 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String, default="learner")
+    active_course_id = Column(Integer, ForeignKey("courses.id"), nullable=True)
     stats = relationship("UserStats", back_populates="user", uselist=False)
     skill_progress = relationship("UserSkillProgress", back_populates="user")
     attempts = relationship("UserLessonAttempt", back_populates="user")
     achievements = relationship("UserAchievement", back_populates="user")
+    enrolled_courses = relationship("UserCourse", back_populates="user")
 
 
 class UserStats(Base):
@@ -131,6 +133,17 @@ class UserAchievement(Base):
     earned_at = Column(DateTime, default=datetime.utcnow)
     achievement = relationship("Achievement", back_populates="user_achievements")
     user = relationship("User", back_populates="achievements")
+
+
+class UserCourse(Base):
+    __tablename__ = "user_courses"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    course_id = Column(Integer, ForeignKey("courses.id"))
+    xp_in_course = Column(Integer, default=0)
+    enrolled_at = Column(DateTime, default=datetime.utcnow)
+    user = relationship("User", back_populates="enrolled_courses")
+    course = relationship("Course")
 
 
 class LeaderboardSeedUser(Base):

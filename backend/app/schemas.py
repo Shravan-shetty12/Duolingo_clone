@@ -97,3 +97,19 @@ class LeaderboardEntry(BaseModel):
     xp_total: int
     avatar_key: str
     is_current_user: bool
+
+
+class CourseOut(BaseModel):
+    id: int
+    language_name: str
+    flag_emoji: str
+    enrolled: bool
+    xp_in_course: int
+    model_config = {"from_attributes": True}
+
+
+class ProfileOut(BaseModel):
+    username: str
+    stats: StatsOut
+    achievements: list[AchievementOut]
+    active_course_id: Optional[int] = None

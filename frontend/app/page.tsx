@@ -10,8 +10,8 @@ function PathSkeleton() {
   return (
     <div style={{ maxWidth: "480px", margin: "0 auto", padding: "24px 16px" }}>
       <div className="skeleton" style={{ height: "72px", marginBottom: "24px" }} />
-      <div className="skeleton" style={{ height: "100px", marginBottom: "28px" }} />
-      {[1, 2, 3].map(i => (
+      <div className="skeleton" style={{ height: "110px", marginBottom: "28px" }} />
+      {[1, 2, 3, 4].map(i => (
         <div key={i} style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
           <div className="skeleton" style={{ width: "64px", height: "64px", borderRadius: "50%" }} />
         </div>
@@ -23,14 +23,27 @@ function PathSkeleton() {
 export default function HomePage() {
   const [path, setPath] = useState<PathData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [noActiveCourse, setNoActiveCourse] = useState(false);
   const router = useRouter();
-  const fetchStats = useStatsStore(s => s.fetch);
+  const { fetch: fetchStats, activeCourse } = useStatsStore();
 
   useEffect(() => {
-    Promise.all([api.getPath(), fetchStats()])
-      .then(([p]) => setPath(p))
-      .finally(() => setLoading(false));
+    const init = async () => {
+      await fetchStats();
+      try {
+        const p = await api.getPath();
+        setPath(p);
+      } catch {
+        setNoActiveCourse(true);
+      }
+      setLoading(false);
+    };
+    init();
   }, [fetchStats]);
+
+  useEffect(() => {
+    if (noActiveCourse) router.replace("/choose-language");
+  }, [noActiveCourse, router]);
 
   const handleStartSkill = async (skillId: number) => {
     try {
@@ -41,14 +54,43 @@ export default function HomePage() {
     }
   };
 
-  if (loading) return <PathSkeleton />;
+  if (loading || noActiveCourse) return <PathSkeleton />;
   if (!path) return null;
 
   let globalOffset = 0;
 
   return (
     <div style={{ maxWidth: "480px", margin: "0 auto", padding: "24px 16px" }}>
+      {/* Active course banner */}
+      {activeCourse && (
+        <div style={{
+          display: "flex", alignItems: "center", gap: "12px",
+          background: "white", border: "2px solid #e5e5e5", borderRadius: "20px",
+          padding: "14px 18px", marginBottom: "20px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+        }}>
+          <span style={{ fontSize: "32px" }}>{activeCourse.flag_emoji}</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 900, fontSize: "16px", color: "#3c3c3c" }}>
+              {activeCourse.language_name}
+            </div>
+            <div style={{ fontSize: "12px", color: "#afafaf", fontWeight: 600 }}>Current course</div>
+          </div>
+          <button onClick={() => router.push("/choose-language")} style={{
+            background: "#f0f0f0", border: "none", borderRadius: "12px",
+            padding: "8px 14px", fontWeight: 800, fontSize: "12px",
+            color: "#3c3c3c", cursor: "pointer", transition: "background 0.1s",
+          }}
+            onMouseEnter={e => (e.currentTarget.style.background = "#e5e5e5")}
+            onMouseLeave={e => (e.currentTarget.style.background = "#f0f0f0")}
+          >
+            Switch
+          </button>
+        </div>
+      )}
+
       <DailyGoalBar />
+
       {path.units.map((unit) => {
         const section = (
           <UnitSection
@@ -62,7 +104,6 @@ export default function HomePage() {
         return section;
       })}
 
-      {/* Footer mascot */}
       <div style={{ textAlign: "center", padding: "32px 0 16px", color: "#afafaf" }}>
         <div style={{ fontSize: "48px", marginBottom: "8px" }}>🦉</div>
         <div style={{ fontWeight: 700, fontSize: "14px" }}>You've reached the end!</div>
@@ -96,9 +137,7 @@ function DailyGoalBar() {
       <div style={{ background: "#e5e5e5", borderRadius: "10px", height: "14px", overflow: "hidden" }}>
         <div style={{
           width: `${pct}%`, height: "100%",
-          background: done
-            ? "linear-gradient(90deg, #FFC800, #FFE066)"
-            : "linear-gradient(90deg, #58CC02, #89E219)",
+          background: done ? "linear-gradient(90deg,#FFC800,#FFE066)" : "linear-gradient(90deg,#58CC02,#89E219)",
           borderRadius: "10px", transition: "width 0.6s ease",
         }} />
       </div>

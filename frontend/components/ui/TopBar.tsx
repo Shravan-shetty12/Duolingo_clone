@@ -7,10 +7,11 @@ export default function TopBar() {
   const { stats, fetch } = useStatsStore();
   const pathname = usePathname();
   const isLesson = pathname.startsWith("/lesson");
+  const isChoose = pathname.startsWith("/choose-language");
 
   useEffect(() => { fetch(); }, [fetch]);
 
-  if (isLesson) return null;
+  if (isLesson || isChoose) return null;
 
   return (
     <header style={{

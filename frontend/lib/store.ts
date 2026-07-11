@@ -1,18 +1,22 @@
 import { create } from "zustand";
-import { Stats } from "./types";
+import { Stats, Course } from "./types";
 import { api } from "./api";
 
 interface StatsStore {
   stats: Stats | null;
+  activeCourse: Course | null;
   fetch: () => Promise<void>;
-  setStats: (s: Stats) => void;
+  setActiveCourse: (course: Course) => void;
 }
 
 export const useStatsStore = create<StatsStore>((set) => ({
   stats: null,
+  activeCourse: null,
   fetch: async () => {
-    const stats = await api.getStats();
-    set({ stats });
+    const [stats, courses] = await Promise.all([api.getStats(), api.getCourses()]);
+    const profile = await api.getProfile();
+    const active = courses.find(c => c.id === profile.active_course_id) ?? null;
+    set({ stats, activeCourse: active });
   },
-  setStats: (stats) => set({ stats }),
+  setActiveCourse: (course) => set({ activeCourse: course }),
 }));

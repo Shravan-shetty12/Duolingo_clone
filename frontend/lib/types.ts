@@ -77,6 +77,15 @@ export interface Profile {
   username: string;
   stats: Stats;
   achievements: Achievement[];
+  active_course_id: number | null;
+}
+
+export interface Course {
+  id: number;
+  language_name: string;
+  flag_emoji: string;
+  enrolled: boolean;
+  xp_in_course: number;
 }
 
 export interface LeaderboardEntry {

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useStatsStore } from "@/lib/store";
 
 const navItems = [
   { href: "/", icon: "🏠", label: "Learn" },
@@ -10,24 +11,19 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { activeCourse } = useStatsStore();
   const isLesson = pathname.startsWith("/lesson");
+  const isChoose = pathname.startsWith("/choose-language");
 
-  if (isLesson) return null;
+  if (isLesson || isChoose) return null;
 
   return (
     <aside style={{
-      borderRight: "2px solid #e5e5e5",
-      background: "white",
-      width: "240px",
-      minHeight: "100vh",
-      position: "sticky",
-      top: 0,
-      height: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      paddingTop: "24px",
-      paddingLeft: "12px",
-      paddingRight: "12px",
+      borderRight: "2px solid #e5e5e5", background: "white",
+      width: "240px", minHeight: "100vh", position: "sticky", top: 0,
+      height: "100vh", display: "flex", flexDirection: "column",
+      paddingTop: "24px", paddingLeft: "12px", paddingRight: "12px",
     }} className="hidden md:flex">
       {/* Logo */}
       <Link href="/" style={{
@@ -45,19 +41,13 @@ export default function Sidebar() {
           const active = pathname === href;
           return (
             <Link key={href} href={href} style={{
-              borderRadius: "14px",
-              padding: "13px 16px",
-              fontWeight: 800,
-              fontSize: "15px",
-              display: "flex",
-              alignItems: "center",
-              gap: "14px",
+              borderRadius: "14px", padding: "13px 16px", fontWeight: 800,
+              fontSize: "15px", display: "flex", alignItems: "center", gap: "14px",
               textDecoration: "none",
               color: active ? "#58CC02" : "#6b7280",
               background: active ? "#e8ffd4" : "transparent",
               border: active ? "2px solid #c3f08a" : "2px solid transparent",
               transition: "all 0.15s",
-              letterSpacing: "0.2px",
             }}>
               <span style={{ fontSize: "22px" }}>{icon}</span>
               {label}
@@ -66,16 +56,49 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom section */}
-      <div style={{ marginTop: "auto", padding: "16px 12px", borderTop: "2px solid #e5e5e5" }}>
-        <div style={{
-          background: "#fff9e6", border: "2px solid #ffc800", borderRadius: "14px",
-          padding: "14px", textAlign: "center"
-        }}>
-          <div style={{ fontSize: "24px", marginBottom: "4px" }}>🇪🇸</div>
-          <div style={{ fontWeight: 800, fontSize: "13px", color: "#3c3c3c" }}>Spanish</div>
-          <div style={{ fontSize: "11px", color: "#afafaf", marginTop: "2px" }}>Current course</div>
-        </div>
+      {/* Active course + switcher */}
+      <div style={{ marginTop: "auto", paddingBottom: "16px" }}>
+        {activeCourse ? (
+          <div style={{
+            background: "#fff9e6", border: "2px solid #ffc800",
+            borderRadius: "16px", padding: "14px 16px",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+              <span style={{ fontSize: "28px" }}>{activeCourse.flag_emoji}</span>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: "14px", color: "#3c3c3c" }}>
+                  {activeCourse.language_name}
+                </div>
+                <div style={{ fontSize: "11px", color: "#afafaf" }}>
+                  {activeCourse.xp_in_course} XP earned
+                </div>
+              </div>
+            </div>
+            <button onClick={() => router.push("/choose-language")} style={{
+              width: "100%", background: "white", border: "2px solid #e5e5e5",
+              borderBottom: "3px solid #d0d0d0", borderRadius: "12px",
+              padding: "8px", fontWeight: 800, fontSize: "12px",
+              color: "#3c3c3c", cursor: "pointer", letterSpacing: "0.5px",
+              textTransform: "uppercase", fontFamily: "inherit",
+              transition: "background 0.1s",
+            }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#f0f0f0")}
+              onMouseLeave={e => (e.currentTarget.style.background = "white")}
+            >
+              🌍 Switch Language
+            </button>
+          </div>
+        ) : (
+          <button onClick={() => router.push("/choose-language")} style={{
+            width: "100%", background: "#58CC02", border: "none",
+            borderBottom: "3px solid #46A302", borderRadius: "14px",
+            padding: "13px", fontWeight: 800, fontSize: "13px",
+            color: "white", cursor: "pointer", letterSpacing: "0.5px",
+            textTransform: "uppercase", fontFamily: "inherit",
+          }}>
+            🌍 Choose a Language
+          </button>
+        )}
       </div>
     </aside>
   );
