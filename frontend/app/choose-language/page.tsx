@@ -6,6 +6,7 @@ import { Course } from "@/lib/types";
 import { useStatsStore } from "@/lib/store";
 
 const LANG_DESCRIPTIONS: Record<string, string> = {
+  English: "1.5B+ speakers · Global language",
   Spanish: "500M+ speakers · Latin America & Spain",
   French: "300M+ speakers · Europe & Africa",
   Japanese: "125M+ speakers · Japan",
@@ -13,6 +14,7 @@ const LANG_DESCRIPTIONS: Record<string, string> = {
 };
 
 const LANG_BG: Record<string, string> = {
+  English: "linear-gradient(135deg,#58CC02,#46A302)",
   Spanish: "linear-gradient(135deg,#FF9600,#FF6B00)",
   French: "linear-gradient(135deg,#1CB0F6,#0099D9)",
   Japanese: "linear-gradient(135deg,#FF4B4B,#CC0000)",

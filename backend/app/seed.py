@@ -7,6 +7,98 @@ from .models import (User, UserStats, Course, Unit, Skill, UserSkillProgress,
 
 
 COURSES = {
+    "English": {
+        "flag": "🇬🇧",
+        "units": [
+            ("Basics", "#58CC02", [
+                ("Greetings", "👋", [[
+                    ("mcq", "Which word means a friendly greeting?", "Hello", ["Hello", "Goodbye", "Sorry", "Please"]),
+                    ("type_answer", "What do you say when you meet someone in the morning?", "Good morning", []),
+                    ("mcq", "Which phrase means farewell?", "Goodbye", ["Hello", "Goodbye", "Yes", "No"]),
+                    ("fill_blank", "_____ you (Thank)", "Thank", ["Thank", "Sorry", "Please", "Hello"]),
+                    ("translate", "Tap: a polite request word", "Please", ["Please", "Sorry", "Hello", "Bye"]),
+                    ("mcq", "How do you apologize?", "Sorry", ["Thanks", "Please", "Sorry", "Hello"]),
+                    ("type_answer", "Reply to 'Thank you'", "You're welcome", []),
+                ]]),
+                ("Numbers", "🔢", [[
+                    ("mcq", "How do you spell 1?", "one", ["one", "two", "three", "four"]),
+                    ("mcq", "How do you spell 2?", "two", ["one", "two", "three", "four"]),
+                    ("type_answer", "Spell the number 5", "five", []),
+                    ("fill_blank", "_____ (3)", "three", ["three", "four", "two", "one"]),
+                    ("translate", "Tap: the word for 10", "ten", ["ten", "nine", "eight", "seven"]),
+                    ("mcq", "Which word means 10?", "ten", ["seven", "eight", "nine", "ten"]),
+                    ("type_answer", "Spell the number 20", "twenty", []),
+                ]]),
+                ("Colors", "🎨", [[
+                    ("mcq", "What color is the sky on a clear day?", "blue", ["red", "blue", "green", "yellow"]),
+                    ("type_answer", "What color is grass?", "green", []),
+                    ("fill_blank", "The sun is _____ (color)", "yellow", ["yellow", "red", "blue", "green"]),
+                    ("mcq", "What color is blood?", "red", ["red", "blue", "green", "yellow"]),
+                    ("translate", "Tap: the color of snow", "white", ["white", "black", "red", "blue"]),
+                    ("type_answer", "What color is coal?", "black", []),
+                    ("mcq", "What color is an orange fruit?", "orange", ["purple", "orange", "pink", "brown"]),
+                ]]),
+            ]),
+            ("Grammar", "#CE82FF", [
+                ("Pronouns", "🙋", [[
+                    ("mcq", "Which pronoun refers to yourself?", "I", ["I", "you", "he", "she"]),
+                    ("type_answer", "What pronoun do you use for a male person?", "he", []),
+                    ("fill_blank", "_____ is my friend (female)", "She", ["She", "He", "They", "It"]),
+                    ("mcq", "Which pronoun is used for a group of people?", "they", ["I", "you", "he", "they"]),
+                    ("translate", "Tap: the pronoun for yourself and others", "we", ["we", "they", "I", "you"]),
+                    ("type_answer", "What pronoun refers to a thing?", "it", []),
+                    ("mcq", "Which pronoun is used when speaking to someone?", "you", ["I", "you", "he", "she"]),
+                ]]),
+                ("Verbs", "⚡", [[
+                    ("mcq", "What is the verb in: 'She runs fast'?", "runs", ["runs", "fast", "she", "the"]),
+                    ("type_answer", "Base form of 'running'", "run", []),
+                    ("fill_blank", "He _____ to school (go)", "goes", ["goes", "go", "went", "gone"]),
+                    ("mcq", "Past tense of 'eat'?", "ate", ["eated", "ate", "eat", "eaten"]),
+                    ("translate", "Tap: past tense of 'see'", "saw", ["saw", "seen", "see", "sees"]),
+                    ("type_answer", "Past tense of 'run'", "ran", []),
+                    ("mcq", "Which is correct: 'She ___ happy'?", "is", ["are", "is", "am", "be"]),
+                ]]),
+                ("Articles", "📖", [[
+                    ("mcq", "Which article is used before a vowel sound?", "an", ["a", "an", "the", "some"]),
+                    ("type_answer", "Article for a specific noun", "the", []),
+                    ("fill_blank", "I have _____ apple", "an", ["an", "a", "the", "some"]),
+                    ("mcq", "'___ cat is on the mat' — which article?", "The", ["A", "An", "The", "Some"]),
+                    ("translate", "Tap: article for a non-specific singular noun", "a", ["a", "an", "the", "some"]),
+                    ("type_answer", "Complete: '___ umbrella'", "an", []),
+                    ("mcq", "Which article makes a noun definite?", "the", ["a", "an", "the", "some"]),
+                ]]),
+            ]),
+            ("Vocabulary", "#FF9600", [
+                ("Animals", "🐾", [[
+                    ("mcq", "What is a domestic animal that barks?", "dog", ["dog", "cat", "bird", "fish"]),
+                    ("type_answer", "Name the animal that meows", "cat", []),
+                    ("fill_blank", "A _____ can fly (bird)", "bird", ["bird", "fish", "dog", "cat"]),
+                    ("mcq", "Which animal lives in water?", "fish", ["dog", "cat", "bird", "fish"]),
+                    ("translate", "Tap: the largest land animal", "elephant", ["elephant", "lion", "tiger", "bear"]),
+                    ("type_answer", "Name the animal known as king of the jungle", "lion", []),
+                    ("mcq", "Which animal is known for its stripes?", "tiger", ["lion", "tiger", "bear", "wolf"]),
+                ]]),
+                ("Food", "🍎", [[
+                    ("mcq", "Which is a fruit?", "apple", ["apple", "carrot", "potato", "onion"]),
+                    ("type_answer", "Name a yellow curved fruit", "banana", []),
+                    ("fill_blank", "I drink _____ in the morning (milk)", "milk", ["milk", "juice", "water", "tea"]),
+                    ("mcq", "Which is a vegetable?", "carrot", ["apple", "banana", "carrot", "grape"]),
+                    ("translate", "Tap: a common breakfast grain food", "bread", ["bread", "rice", "pasta", "soup"]),
+                    ("type_answer", "Name a hot morning drink", "coffee", []),
+                    ("mcq", "Which food comes from hens?", "egg", ["milk", "egg", "butter", "cheese"]),
+                ]]),
+                ("Places", "🗺️", [[
+                    ("mcq", "Where do you go to buy things?", "market", ["market", "school", "hospital", "park"]),
+                    ("type_answer", "Place where children study", "school", []),
+                    ("fill_blank", "I go to the _____ when I am sick (hospital)", "hospital", ["hospital", "school", "park", "market"]),
+                    ("mcq", "Where do you go to read books?", "library", ["market", "library", "hospital", "airport"]),
+                    ("translate", "Tap: place where planes land", "airport", ["airport", "station", "port", "market"]),
+                    ("type_answer", "Place where trains stop", "station", []),
+                    ("mcq", "Where do people live together in units?", "apartment", ["house", "apartment", "hotel", "school"]),
+                ]]),
+            ]),
+        ],
+    },
     "Spanish": {
         "flag": "🇪🇸",
         "units": [
