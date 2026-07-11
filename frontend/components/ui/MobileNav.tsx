@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useStatsStore } from "@/lib/store";
+import FlagImage from "@/components/ui/FlagImage";
 
 const navItems = [
   { href: "/", icon: "🏠", label: "Learn" },
@@ -15,7 +16,7 @@ export default function MobileNav() {
   const { activeCourse } = useStatsStore();
   const isLesson = pathname.startsWith("/lesson");
   const isChoose = pathname.startsWith("/choose-language");
-  if (isLesson || isChoose) return null;
+  if (isChoose) return null;
 
   return (
     <nav style={{
@@ -47,8 +48,10 @@ export default function MobileNav() {
         color: "#afafaf", fontWeight: 700, fontSize: "11px", gap: "2px",
         cursor: "pointer",
       }}>
-        <span style={{ fontSize: "22px" }}>{activeCourse?.flag_emoji ?? "🌍"}</span>
-        Language
+        {activeCourse
+          ? <FlagImage languageName={activeCourse.language_name} width={28} height={21} borderRadius={4} />
+          : <span style={{ fontSize: "22px" }}>🌍</span>}
+        {activeCourse?.language_name ?? "Language"}
       </button>
     </nav>
   );

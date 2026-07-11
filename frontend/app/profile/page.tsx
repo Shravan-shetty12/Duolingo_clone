@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Profile } from "@/lib/types";
+import { useStatsStore } from "@/lib/store";
+import FlagImage from "@/components/ui/FlagImage";
 
 function Skeleton() {
   return (
@@ -21,6 +23,7 @@ function Skeleton() {
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { activeCourse } = useStatsStore();
 
   useEffect(() => {
     api.getProfile().then(setProfile).finally(() => setLoading(false));
@@ -56,8 +59,10 @@ export default function ProfilePage() {
         <h1 style={{ fontWeight: 900, fontSize: "24px", color: "white", marginBottom: "4px" }}>
           {profile.username}
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "14px", fontWeight: 600 }}>
-          🇪🇸 Spanish Learner
+        <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "14px", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          {activeCourse
+            ? <><FlagImage languageName={activeCourse.language_name} width={24} height={18} borderRadius={3} /> {activeCourse.language_name} Learner</>
+            : "Language Learner"}
         </p>
       </div>
 

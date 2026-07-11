@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { PathData } from "@/lib/types";
 import UnitSection from "@/components/path/UnitSection";
 import { useStatsStore } from "@/lib/store";
+import FlagImage from "@/components/ui/FlagImage";
 
 function PathSkeleton() {
   return (
@@ -69,7 +70,7 @@ export default function HomePage() {
           padding: "14px 18px", marginBottom: "20px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
         }}>
-          <span style={{ fontSize: "32px" }}>{activeCourse.flag_emoji}</span>
+          <FlagImage languageName={activeCourse.language_name} width={40} height={30} borderRadius={6} />
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: 900, fontSize: "16px", color: "#3c3c3c" }}>
               {activeCourse.language_name}

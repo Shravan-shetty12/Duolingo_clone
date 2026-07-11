@@ -10,6 +10,14 @@ import FeedbackBar from "@/components/lesson/FeedbackBar";
 import LessonCompleteModal from "@/components/lesson/LessonCompleteModal";
 import OutOfHeartsModal from "@/components/lesson/OutOfHeartsModal";
 
+const TYPE_META: Record<string, { label: string; icon: string; color: string }> = {
+  mcq:         { label: "Multiple Choice", icon: "🔤", color: "#1CB0F6" },
+  translate:   { label: "Tap the Words",   icon: "👆", color: "#CE82FF" },
+  fill_blank:  { label: "Fill in the Blank", icon: "✏️", color: "#FF9600" },
+  type_answer: { label: "Type the Answer", icon: "⌨️", color: "#58CC02" },
+  match:       { label: "Match Pairs",     icon: "🔗", color: "#FFC800" },
+};
+
 export default function LessonPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
@@ -42,13 +50,21 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
     init().catch(() => setLoading(false));
   }, [id]);
 
+  // Enter key to continue
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && feedback && !showNoHearts) handleContinue();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  });
+
   const handleAnswer = useCallback(async (answer: string) => {
     if (!attempt || !lesson || feedback) return;
     const exercise = lesson.exercises[currentIdx];
     const result = await api.submitAnswer(attempt.id, exercise.id, answer);
     setFeedback(result);
     setHearts(result.hearts_remaining);
-
     if (!result.correct) {
       setShaking(true);
       setTimeout(() => setShaking(false), 500);
@@ -62,7 +78,6 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
     if (!lesson || !attempt) return;
     const nextIdx = currentIdx + 1;
     setFeedback(null);
-
     if (nextIdx >= lesson.exercises.length) {
       const completed = await api.completeAttempt(attempt.id);
       await fetchStats();
@@ -91,19 +106,33 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
   if (loading) return (
     <div style={{
       minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      background: "#F7F7F7", flexDirection: "column", gap: "16px"
+      background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)",
+      flexDirection: "column", gap: 20,
     }}>
-      <div style={{ fontSize: "48px", animation: "pulse 1.5s ease-in-out infinite" }}>🦉</div>
-      <div style={{ color: "#58CC02", fontSize: "16px", fontWeight: 800 }}>Loading lesson...</div>
+      <div style={{
+        width: 64, height: 64, borderRadius: "50%",
+        border: "4px solid rgba(88,204,2,0.2)",
+        borderTop: "4px solid #58CC02",
+        animation: "spin 0.8s linear infinite",
+      }} />
+      <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 15, fontWeight: 700, letterSpacing: "0.5px" }}>
+        Loading lesson...
+      </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 
   if (!lesson || !attempt) return null;
 
   const exercise = lesson.exercises[currentIdx];
+  const meta = TYPE_META[exercise.type] ?? { label: exercise.type, icon: "📝", color: "#afafaf" };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F7F7F7", display: "flex", flexDirection: "column" }}>
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(160deg, #0f0c29 0%, #1a1740 40%, #24243e 100%)",
+      display: "flex", flexDirection: "column",
+    }}>
       <LessonHeader
         current={currentIdx}
         total={lesson.exercises.length}
@@ -113,20 +142,23 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
       />
 
       <div style={{
-        flex: 1, maxWidth: "640px", margin: "0 auto", width: "100%",
-        padding: "40px 24px 140px",
+        flex: 1, maxWidth: 640, margin: "0 auto", width: "100%",
+        padding: "36px 24px 160px",
         animation: shaking ? "shake 0.4s ease" : undefined,
       }}>
         {/* Exercise type badge */}
         <div style={{
-          display: "inline-flex", alignItems: "center", gap: "6px",
-          background: "white", border: "2px solid #e5e5e5", borderRadius: "20px",
-          padding: "5px 14px", marginBottom: "28px",
-          fontSize: "12px", fontWeight: 800, color: "#afafaf",
+          display: "inline-flex", alignItems: "center", gap: 7,
+          background: `${meta.color}18`,
+          border: `1.5px solid ${meta.color}40`,
+          borderRadius: 20, padding: "6px 14px", marginBottom: 28,
+          fontSize: 12, fontWeight: 800,
+          color: meta.color,
           textTransform: "uppercase", letterSpacing: "0.8px",
+          animation: "fadeInDown 0.3s ease both",
         }}>
-          <span>{typeIcon(exercise.type)}</span>
-          {typeLabel(exercise.type)}
+          <span>{meta.icon}</span>
+          {meta.label}
         </div>
 
         <ExerciseRenderer
@@ -164,22 +196,4 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
       )}
     </div>
   );
-}
-
-function typeLabel(type: string) {
-  const map: Record<string, string> = {
-    mcq: "Multiple Choice",
-    translate: "Tap the Words",
-    fill_blank: "Fill in the Blank",
-    type_answer: "Type the Answer",
-    match: "Match Pairs",
-  };
-  return map[type] ?? type;
-}
-
-function typeIcon(type: string) {
-  const map: Record<string, string> = {
-    mcq: "🔤", translate: "👆", fill_blank: "✏️", type_answer: "⌨️", match: "🔗",
-  };
-  return map[type] ?? "📝";
 }

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useStatsStore } from "@/lib/store";
+import FlagImage from "@/components/ui/FlagImage";
 
 const navItems = [
   { href: "/", icon: "🏠", label: "Learn" },
@@ -16,11 +17,12 @@ export default function Sidebar() {
   const isLesson = pathname.startsWith("/lesson");
   const isChoose = pathname.startsWith("/choose-language");
 
-  if (isLesson || isChoose) return null;
+  if (isChoose) return null;
 
   return (
     <aside style={{
-      borderRight: "2px solid #e5e5e5", background: "white",
+      borderRight: isLesson ? "1px solid rgba(255,255,255,0.08)" : "2px solid #e5e5e5",
+      background: isLesson ? "rgba(15,12,41,0.97)" : "white",
       width: "240px", minHeight: "100vh", position: "sticky", top: 0,
       height: "100vh", display: "flex", flexDirection: "column",
       paddingTop: "24px", paddingLeft: "12px", paddingRight: "12px",
@@ -44,9 +46,9 @@ export default function Sidebar() {
               borderRadius: "14px", padding: "13px 16px", fontWeight: 800,
               fontSize: "15px", display: "flex", alignItems: "center", gap: "14px",
               textDecoration: "none",
-              color: active ? "#58CC02" : "#6b7280",
-              background: active ? "#e8ffd4" : "transparent",
-              border: active ? "2px solid #c3f08a" : "2px solid transparent",
+              color: active ? "#58CC02" : isLesson ? "rgba(255,255,255,0.5)" : "#6b7280",
+              background: active ? (isLesson ? "rgba(88,204,2,0.15)" : "#e8ffd4") : "transparent",
+              border: active ? (isLesson ? "2px solid rgba(88,204,2,0.3)" : "2px solid #c3f08a") : "2px solid transparent",
               transition: "all 0.15s",
             }}>
               <span style={{ fontSize: "22px" }}>{icon}</span>
@@ -64,7 +66,7 @@ export default function Sidebar() {
             borderRadius: "16px", padding: "14px 16px",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
-              <span style={{ fontSize: "28px" }}>{activeCourse.flag_emoji}</span>
+              <FlagImage languageName={activeCourse.language_name} width={40} height={30} borderRadius={6} />
               <div>
                 <div style={{ fontWeight: 800, fontSize: "14px", color: "#3c3c3c" }}>
                   {activeCourse.language_name}
@@ -85,7 +87,7 @@ export default function Sidebar() {
               onMouseEnter={e => (e.currentTarget.style.background = "#f0f0f0")}
               onMouseLeave={e => (e.currentTarget.style.background = "white")}
             >
-              🌍 Switch Language
+              Switch Language
             </button>
           </div>
         ) : (
@@ -96,7 +98,7 @@ export default function Sidebar() {
             color: "white", cursor: "pointer", letterSpacing: "0.5px",
             textTransform: "uppercase", fontFamily: "inherit",
           }}>
-            🌍 Choose a Language
+            Choose a Language
           </button>
         )}
       </div>

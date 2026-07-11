@@ -8,19 +8,29 @@ interface Props {
   disabled: boolean;
 }
 
+const OPTION_LETTERS = ["A", "B", "C", "D"];
+
 export default function ExerciseRenderer({ exercise, onAnswer, disabled }: Props) {
   const options: string[] = JSON.parse(exercise.options_json || "[]");
 
-  if (exercise.type === "mcq") {
+  if (exercise.type === "mcq")
     return <MCQ exercise={exercise} options={options} onAnswer={onAnswer} disabled={disabled} />;
-  }
-  if (exercise.type === "translate") {
+  if (exercise.type === "translate")
     return <TapWords exercise={exercise} options={options} onAnswer={onAnswer} disabled={disabled} />;
-  }
-  if (exercise.type === "fill_blank") {
+  if (exercise.type === "fill_blank")
     return <FillBlank exercise={exercise} options={options} onAnswer={onAnswer} disabled={disabled} />;
-  }
   return <TypeAnswer exercise={exercise} onAnswer={onAnswer} disabled={disabled} />;
+}
+
+/* ── Shared prompt ── */
+function Prompt({ text }: { text: string }) {
+  return (
+    <p style={{
+      fontSize: "clamp(18px,3vw,24px)", fontWeight: 800,
+      color: "#ffffff", lineHeight: 1.5, marginBottom: 32,
+      animation: "fadeInDown 0.35s ease both",
+    }}>{text}</p>
+  );
 }
 
 /* ── MCQ ── */
@@ -28,46 +38,62 @@ function MCQ({ exercise, options, onAnswer, disabled }: Props & { options: strin
   const [selected, setSelected] = useState<string | null>(null);
 
   const handleClick = (opt: string) => {
-    if (disabled) return;
+    if (disabled || selected) return;
     setSelected(opt);
     onAnswer(opt);
   };
 
   return (
     <div style={{ animation: "fadeInDown 0.3s ease" }}>
-      <p style={{ fontSize: "22px", fontWeight: 800, marginBottom: "32px", color: "#3c3c3c", lineHeight: 1.4 }}>
-        {exercise.prompt}
-      </p>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
-        {options.map((opt, i) => (
-          <button key={opt} disabled={disabled} onClick={() => handleClick(opt)}
-            style={{
-              padding: "18px 14px", borderRadius: "16px",
-              border: selected === opt ? "3px solid #1CB0F6" : "2px solid #e5e5e5",
-              borderBottom: selected === opt ? "5px solid #0099D9" : "4px solid #d0d0d0",
-              background: selected === opt ? "#E8F8FF" : "white",
-              fontWeight: 700, fontSize: "15px",
-              cursor: disabled ? "not-allowed" : "pointer",
-              transition: "all 0.12s", color: "#3c3c3c",
-              textAlign: "left",
-              animation: `fadeInDown 0.3s ease ${i * 0.05}s both`,
-            }}
-            onMouseEnter={e => {
-              if (!disabled && selected !== opt) {
-                (e.currentTarget as HTMLElement).style.borderColor = "#84D8FF";
-                (e.currentTarget as HTMLElement).style.background = "#f0fbff";
-              }
-            }}
-            onMouseLeave={e => {
-              if (selected !== opt) {
-                (e.currentTarget as HTMLElement).style.borderColor = "#e5e5e5";
-                (e.currentTarget as HTMLElement).style.background = "white";
-              }
-            }}
-          >
-            {opt}
-          </button>
-        ))}
+      <Prompt text={exercise.prompt} />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        {options.map((opt, i) => {
+          const isSelected = selected === opt;
+          return (
+            <button key={opt} disabled={disabled} onClick={() => handleClick(opt)}
+              style={{
+                padding: "16px 14px", borderRadius: 16, textAlign: "left",
+                border: isSelected ? "2px solid #1CB0F6" : "1.5px solid rgba(255,255,255,0.1)",
+                borderBottom: isSelected ? "4px solid #0099D9" : "3px solid rgba(255,255,255,0.06)",
+                background: isSelected
+                  ? "rgba(28,176,246,0.15)"
+                  : "rgba(255,255,255,0.05)",
+                backdropFilter: "blur(8px)",
+                fontWeight: 700, fontSize: 15,
+                cursor: disabled ? "default" : "pointer",
+                transition: "all 0.15s",
+                color: isSelected ? "#1CB0F6" : "rgba(255,255,255,0.85)",
+                display: "flex", alignItems: "center", gap: 12,
+                animation: `fadeInDown 0.3s ease ${i * 0.06}s both`,
+                boxShadow: isSelected ? "0 0 16px rgba(28,176,246,0.2)" : "none",
+              }}
+              onMouseEnter={e => {
+                if (!disabled && !selected) {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.1)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.25)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+                }
+              }}
+              onMouseLeave={e => {
+                if (!isSelected) {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.1)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                }
+              }}
+            >
+              <span style={{
+                width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background: isSelected ? "#1CB0F6" : "rgba(255,255,255,0.08)",
+                color: isSelected ? "white" : "rgba(255,255,255,0.4)",
+                fontSize: 12, fontWeight: 900, letterSpacing: "0.5px",
+                transition: "all 0.15s",
+              }}>{OPTION_LETTERS[i]}</span>
+              {opt}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -92,57 +118,62 @@ function TapWords({ exercise, options, onAnswer, disabled }: Props & { options: 
 
   return (
     <div style={{ animation: "fadeInDown 0.3s ease" }}>
-      <p style={{ fontSize: "22px", fontWeight: 800, marginBottom: "24px", color: "#3c3c3c", lineHeight: 1.4 }}>
-        {exercise.prompt}
-      </p>
+      <Prompt text={exercise.prompt} />
 
       {/* Answer tray */}
       <div style={{
-        minHeight: "64px", border: "2px dashed #c0c0c0", borderRadius: "16px",
-        padding: "10px 14px", marginBottom: "20px",
-        display: "flex", flexWrap: "wrap", gap: "8px", alignItems: "flex-start",
-        background: "#fafafa",
+        minHeight: 68,
+        border: "2px dashed rgba(28,176,246,0.3)",
+        borderRadius: 16, padding: "12px 14px", marginBottom: 16,
+        display: "flex", flexWrap: "wrap", gap: 8, alignItems: "flex-start",
+        background: "rgba(28,176,246,0.04)",
+        transition: "border-color 0.2s",
       }}>
-        {selected.length === 0 && (
-          <span style={{ color: "#c0c0c0", fontSize: "14px", fontWeight: 600, alignSelf: "center" }}>
-            Tap words to build your answer
+        {selected.length === 0 ? (
+          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 14, fontWeight: 600, alignSelf: "center" }}>
+            Tap words below to build your answer
           </span>
-        )}
-        {selected.map(w => (
-          <button key={w} onClick={() => removeWord(w)} disabled={disabled}
+        ) : selected.map((w, i) => (
+          <button key={`${w}-${i}`} onClick={() => removeWord(w)} disabled={disabled}
             style={{
-              padding: "8px 16px", borderRadius: "10px",
-              border: "2px solid #1CB0F6", borderBottom: "3px solid #0099D9",
-              background: "#E8F8FF", fontWeight: 700, cursor: "pointer",
-              fontSize: "14px", color: "#0099D9", transition: "all 0.1s",
-            }}>
-            {w}
-          </button>
+              padding: "8px 14px", borderRadius: 10,
+              border: "1.5px solid #1CB0F6", borderBottom: "3px solid #0099D9",
+              background: "rgba(28,176,246,0.18)", fontWeight: 700,
+              cursor: disabled ? "default" : "pointer",
+              fontSize: 14, color: "#7DD8FF",
+              transition: "all 0.12s",
+              animation: "popIn 0.2s cubic-bezier(0.34,1.56,0.64,1) both",
+            }}
+            onMouseEnter={e => { if (!disabled) (e.currentTarget as HTMLElement).style.background = "rgba(28,176,246,0.3)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(28,176,246,0.18)"; }}
+          >{w}</button>
         ))}
       </div>
 
-      {/* Divider */}
-      <div style={{ height: "2px", background: "#e5e5e5", marginBottom: "20px", borderRadius: "2px" }} />
+      <div style={{ height: 1, background: "rgba(255,255,255,0.07)", marginBottom: 16 }} />
 
       {/* Word bank */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "24px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 28 }}>
         {remaining.map(w => (
           <button key={w} onClick={() => addWord(w)} disabled={disabled}
             style={{
-              padding: "10px 18px", borderRadius: "10px",
-              border: "2px solid #e5e5e5", borderBottom: "3px solid #d0d0d0",
-              background: "white", fontWeight: 700, cursor: "pointer",
-              fontSize: "14px", color: "#3c3c3c", transition: "all 0.1s",
+              padding: "10px 18px", borderRadius: 12,
+              border: "1.5px solid rgba(255,255,255,0.12)",
+              borderBottom: "3px solid rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.07)", fontWeight: 700,
+              cursor: disabled ? "default" : "pointer",
+              fontSize: 14, color: "rgba(255,255,255,0.8)",
+              transition: "all 0.12s",
             }}
             onMouseEnter={e => {
               if (!disabled) {
-                (e.currentTarget as HTMLElement).style.borderColor = "#84D8FF";
-                (e.currentTarget as HTMLElement).style.background = "#f0fbff";
+                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.14)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
               }
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.borderColor = "#e5e5e5";
-              (e.currentTarget as HTMLElement).style.background = "white";
+              (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
             }}
           >{w}</button>
         ))}
@@ -150,8 +181,8 @@ function TapWords({ exercise, options, onAnswer, disabled }: Props & { options: 
 
       <button onClick={() => onAnswer(selected.join(" "))}
         disabled={disabled || selected.length === 0}
-        className="btn-primary">
-        Check
+        style={checkBtnStyle(selected.length > 0 && !disabled)}>
+        Check Answer
       </button>
     </div>
   );
@@ -163,7 +194,7 @@ function FillBlank({ exercise, options, onAnswer, disabled }: Props & { options:
   const parts = exercise.prompt.split("_____");
 
   const handleClick = (opt: string) => {
-    if (disabled) return;
+    if (disabled || selected) return;
     setSelected(opt);
     onAnswer(opt);
   };
@@ -172,50 +203,58 @@ function FillBlank({ exercise, options, onAnswer, disabled }: Props & { options:
     <div style={{ animation: "fadeInDown 0.3s ease" }}>
       {/* Sentence with blank */}
       <div style={{
-        fontSize: "22px", fontWeight: 800, marginBottom: "32px",
-        color: "#3c3c3c", lineHeight: 1.6, display: "flex", flexWrap: "wrap",
-        alignItems: "center", gap: "8px",
+        fontSize: "clamp(18px,3vw,22px)", fontWeight: 800,
+        color: "#ffffff", lineHeight: 1.8, marginBottom: 36,
+        display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8,
       }}>
         <span>{parts[0]}</span>
         <span style={{
-          display: "inline-block", minWidth: "100px", borderBottom: "3px solid #1CB0F6",
-          padding: "2px 8px", color: "#1CB0F6", fontWeight: 900,
-          textAlign: "center",
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          minWidth: 110, padding: "4px 14px",
+          borderBottom: `3px solid ${selected ? "#1CB0F6" : "rgba(255,255,255,0.3)"}`,
+          color: selected ? "#7DD8FF" : "rgba(255,255,255,0.25)",
+          fontWeight: 900, fontSize: "clamp(18px,3vw,22px)",
+          transition: "all 0.2s",
+          background: selected ? "rgba(28,176,246,0.1)" : "transparent",
+          borderRadius: "4px 4px 0 0",
         }}>
           {selected ?? "______"}
         </span>
         {parts[1] && <span>{parts[1]}</span>}
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
-        {options.map((opt, i) => (
-          <button key={opt} disabled={disabled} onClick={() => handleClick(opt)}
-            style={{
-              padding: "14px 22px", borderRadius: "14px",
-              border: selected === opt ? "3px solid #1CB0F6" : "2px solid #e5e5e5",
-              borderBottom: selected === opt ? "5px solid #0099D9" : "4px solid #d0d0d0",
-              background: selected === opt ? "#E8F8FF" : "white",
-              fontWeight: 700, fontSize: "15px",
-              cursor: disabled ? "not-allowed" : "pointer",
-              transition: "all 0.12s", color: "#3c3c3c",
-              animation: `fadeInDown 0.3s ease ${i * 0.06}s both`,
-            }}
-            onMouseEnter={e => {
-              if (!disabled && selected !== opt) {
-                (e.currentTarget as HTMLElement).style.borderColor = "#84D8FF";
-                (e.currentTarget as HTMLElement).style.background = "#f0fbff";
-              }
-            }}
-            onMouseLeave={e => {
-              if (selected !== opt) {
-                (e.currentTarget as HTMLElement).style.borderColor = "#e5e5e5";
-                (e.currentTarget as HTMLElement).style.background = "white";
-              }
-            }}
-          >
-            {opt}
-          </button>
-        ))}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+        {options.map((opt, i) => {
+          const isSelected = selected === opt;
+          return (
+            <button key={opt} disabled={disabled} onClick={() => handleClick(opt)}
+              style={{
+                padding: "14px 22px", borderRadius: 14,
+                border: isSelected ? "2px solid #1CB0F6" : "1.5px solid rgba(255,255,255,0.1)",
+                borderBottom: isSelected ? "4px solid #0099D9" : "3px solid rgba(255,255,255,0.06)",
+                background: isSelected ? "rgba(28,176,246,0.15)" : "rgba(255,255,255,0.05)",
+                fontWeight: 700, fontSize: 15,
+                cursor: disabled ? "default" : "pointer",
+                transition: "all 0.15s",
+                color: isSelected ? "#7DD8FF" : "rgba(255,255,255,0.8)",
+                animation: `fadeInDown 0.3s ease ${i * 0.07}s both`,
+                boxShadow: isSelected ? "0 0 14px rgba(28,176,246,0.2)" : "none",
+              }}
+              onMouseEnter={e => {
+                if (!disabled && !isSelected) {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.1)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
+                }
+              }}
+              onMouseLeave={e => {
+                if (!isSelected) {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                }
+              }}
+            >{opt}</button>
+          );
+        })}
       </div>
     </div>
   );
@@ -229,11 +268,9 @@ function TypeAnswer({ exercise, onAnswer, disabled }: Props) {
 
   return (
     <div style={{ animation: "fadeInDown 0.3s ease" }}>
-      <p style={{ fontSize: "22px", fontWeight: 800, marginBottom: "32px", color: "#3c3c3c", lineHeight: 1.4 }}>
-        {exercise.prompt}
-      </p>
+      <Prompt text={exercise.prompt} />
 
-      <div style={{ position: "relative", marginBottom: "24px" }}>
+      <div style={{ position: "relative", marginBottom: 24 }}>
         <input
           value={value}
           onChange={e => setValue(e.target.value)}
@@ -241,30 +278,59 @@ function TypeAnswer({ exercise, onAnswer, disabled }: Props) {
           disabled={disabled}
           placeholder="Type your answer here..."
           style={{
-            width: "100%", padding: "16px 18px", borderRadius: "16px",
-            border: "2px solid #e5e5e5", borderBottom: "4px solid #d0d0d0",
-            fontSize: "17px", outline: "none", fontWeight: 600,
-            fontFamily: "inherit", color: "#3c3c3c",
-            transition: "border-color 0.15s",
-            background: disabled ? "#fafafa" : "white",
+            width: "100%", padding: "16px 18px 16px 50px",
+            borderRadius: 16,
+            border: "1.5px solid rgba(255,255,255,0.12)",
+            borderBottom: "3px solid rgba(255,255,255,0.06)",
+            fontSize: 17, outline: "none", fontWeight: 600,
+            fontFamily: "inherit", color: "#ffffff",
+            background: "rgba(255,255,255,0.06)",
+            backdropFilter: "blur(8px)",
+            transition: "all 0.2s",
           }}
           onFocus={e => {
             e.target.style.borderColor = "#1CB0F6";
             e.target.style.borderBottomColor = "#0099D9";
+            e.target.style.background = "rgba(28,176,246,0.08)";
+            e.target.style.boxShadow = "0 0 0 3px rgba(28,176,246,0.15)";
           }}
           onBlur={e => {
-            e.target.style.borderColor = "#e5e5e5";
-            e.target.style.borderBottomColor = "#d0d0d0";
+            e.target.style.borderColor = "rgba(255,255,255,0.12)";
+            e.target.style.borderBottomColor = "rgba(255,255,255,0.06)";
+            e.target.style.background = "rgba(255,255,255,0.06)";
+            e.target.style.boxShadow = "none";
           }}
           autoFocus
         />
+        <span style={{
+          position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
+          fontSize: 20, pointerEvents: "none",
+        }}>⌨️</span>
       </div>
 
       <button onClick={() => onAnswer(value.trim())}
         disabled={disabled || !value.trim()}
-        className="btn-primary">
-        Check
+        style={checkBtnStyle(!!value.trim() && !disabled)}>
+        Check Answer
       </button>
     </div>
   );
+}
+
+function checkBtnStyle(active: boolean): React.CSSProperties {
+  return {
+    width: "100%", padding: "16px 24px", borderRadius: 16,
+    border: "none",
+    borderBottom: active ? "4px solid #46A302" : "4px solid rgba(255,255,255,0.06)",
+    background: active
+      ? "linear-gradient(135deg, #58CC02, #46A302)"
+      : "rgba(255,255,255,0.06)",
+    color: active ? "#fff" : "rgba(255,255,255,0.25)",
+    fontWeight: 800, fontSize: 16, letterSpacing: "0.8px",
+    textTransform: "uppercase" as const,
+    cursor: active ? "pointer" : "not-allowed",
+    fontFamily: "inherit",
+    transition: "all 0.2s",
+    boxShadow: active ? "0 0 20px rgba(88,204,2,0.3)" : "none",
+  };
 }

@@ -11,12 +11,12 @@ export default function TopBar() {
 
   useEffect(() => { fetch(); }, [fetch]);
 
-  if (isLesson || isChoose) return null;
+  if (isChoose) return null;
 
   return (
     <header style={{
-      borderBottom: "2px solid #e5e5e5",
-      background: "white",
+      borderBottom: isLesson ? "1px solid rgba(255,255,255,0.08)" : "2px solid #e5e5e5",
+      background: isLesson ? "rgba(15,12,41,0.97)" : "white",
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-end",
@@ -35,12 +35,13 @@ export default function TopBar() {
   );
 }
 
-function StatChip({ icon, value, color }: { icon: string; value: string | number; color: string }) {
+function StatChip({ icon, value, color, dark }: { icon: string; value: string | number; color: string; dark?: boolean }) {
   return (
     <div style={{
       display: "flex", alignItems: "center", gap: "5px",
       padding: "6px 12px", borderRadius: "20px",
-      background: "#f7f7f7", border: "2px solid #e5e5e5",
+      background: dark ? "rgba(255,255,255,0.06)" : "#f7f7f7",
+      border: dark ? "1.5px solid rgba(255,255,255,0.1)" : "2px solid #e5e5e5",
       fontWeight: 800, fontSize: "14px", color,
       transition: "transform 0.1s",
     }}>
