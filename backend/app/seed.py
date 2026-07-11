@@ -319,6 +319,107 @@ COURSES = {
             ]),
         ],
     },
+    "Kannada": {
+        "flag": "🇮🇳",
+        "units": [
+            ("ಮೂಲಗಳು", "#58CC02", [
+                ("ಶುಭಾಶಯಗಳು", "👋", [[
+                    ("mcq", "What does 'ನಮಸ್ಕಾರ' (Namaskara) mean?", "Hello", ["Hello", "Goodbye", "Thank you", "Please"]),
+                    ("type_answer", "Translate: 'Good morning'", "ಶುಭೋದಯ", []),
+                    ("mcq", "What does 'ಧನ್ಯವಾದ' mean?", "Thank you", ["Hello", "Goodbye", "Thank you", "Please"]),
+                    ("fill_blank", "_____ (Yes in Kannada)", "ಹೌದು", ["ಹೌದು", "ಇಲ್ಲ", "ನಮಸ್ಕಾರ", "ಧನ್ಯವಾದ"]),
+                    ("translate", "Tap: 'No' in Kannada", "ಇಲ್ಲ", ["ಇಲ್ಲ", "ಹೌದು", "ನಮಸ್ಕಾರ", "ಬನ್ನಿ"]),
+                    ("mcq", "How do you say 'Come' in Kannada?", "ಬನ್ನಿ", ["ಹೋಗಿ", "ಬನ್ನಿ", "ಕುಳಿತುಕೊಳ್ಳಿ", "ನಿಲ್ಲಿ"]),
+                    ("type_answer", "Translate: 'Goodbye'", "ಹೋಗಿ ಬನ್ನಿ", []),
+                ]]),
+                ("ಸಂಖ್ಯೆಗಳು", "🔢", [[
+                    ("mcq", "What is 'ಒಂದು' (ondu)?", "1", ["1", "2", "3", "4"]),
+                    ("mcq", "What is 'ಎರಡು' (eradu)?", "2", ["1", "2", "3", "4"]),
+                    ("type_answer", "Translate: 'three'", "ಮೂರು", []),
+                    ("fill_blank", "_____ (four)", "ನಾಲ್ಕು", ["ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"]),
+                    ("translate", "Tap: 'five'", "ಐದು", ["ಐದು", "ಆರು", "ಏಳು", "ಎಂಟು"]),
+                    ("mcq", "What is 'ಹತ್ತು'?", "10", ["7", "8", "9", "10"]),
+                    ("type_answer", "Translate: 'hundred'", "ನೂರು", []),
+                ]]),
+                ("ಬಣ್ಣಗಳು", "🎨", [[
+                    ("mcq", "What is 'ಕೆಂಪು' (kempu)?", "red", ["red", "blue", "green", "yellow"]),
+                    ("type_answer", "Translate: 'blue'", "ನೀಲಿ", []),
+                    ("fill_blank", "_____ (green)", "ಹಸಿರು", ["ಹಸಿರು", "ಕೆಂಪು", "ನೀಲಿ", "ಹಳದಿ"]),
+                    ("mcq", "What is 'ಹಳದಿ'?", "yellow", ["red", "blue", "green", "yellow"]),
+                    ("translate", "Tap: 'white'", "ಬಿಳಿ", ["ಬಿಳಿ", "ಕಪ್ಪು", "ಕೆಂಪು", "ನೀಲಿ"]),
+                    ("type_answer", "Translate: 'black'", "ಕಪ್ಪು", []),
+                    ("mcq", "What is 'ಕಿತ್ತಳೆ'?", "orange", ["purple", "orange", "pink", "brown"]),
+                ]]),
+            ]),
+            ("ಕುಟುಂಬ", "#CE82FF", [
+                ("ಕುಟುಂಬ ಸದಸ್ಯರು", "👨👩👧", [[
+                    ("mcq", "What is 'ಅಮ್ಮ' (amma)?", "mother", ["mother", "father", "sister", "brother"]),
+                    ("type_answer", "Translate: 'father'", "ಅಪ್ಪ", []),
+                    ("fill_blank", "_____ (sister)", "ಅಕ್ಕ", ["ಅಕ್ಕ", "ಅಣ್ಣ", "ಅಮ್ಮ", "ಅಪ್ಪ"]),
+                    ("mcq", "What is 'ತಾತ'?", "grandfather", ["grandmother", "grandfather", "uncle", "aunt"]),
+                    ("translate", "Tap: 'brother'", "ಅಣ್ಣ", ["ಅಣ್ಣ", "ಅಕ್ಕ", "ಅಪ್ಪ", "ಅಮ್ಮ"]),
+                    ("type_answer", "Translate: 'grandmother'", "ಅಜ್ಜಿ", []),
+                    ("mcq", "What is 'ಚಿಕ್ಕಪ್ಪ'?", "uncle", ["uncle", "aunt", "cousin", "nephew"]),
+                ]]),
+            ]),
+            ("ಪ್ರಯಾಣ", "#FF9600", [
+                ("ಸ್ಥಳಗಳು", "🗺️", [[
+                    ("mcq", "What is 'ವಿಮಾನ ನಿಲ್ದಾಣ'?", "airport", ["airport", "hotel", "restaurant", "museum"]),
+                    ("type_answer", "Translate: 'school'", "ಶಾಲೆ", []),
+                    ("fill_blank", "_____ (hospital)", "ಆಸ್ಪತ್ರೆ", ["ಆಸ್ಪತ್ರೆ", "ಶಾಲೆ", "ಅಂಗಡಿ", "ದೇವಸ್ಥಾನ"]),
+                    ("mcq", "What is 'ಮಾರುಕಟ್ಟೆ'?", "market", ["market", "school", "hospital", "temple"]),
+                    ("translate", "Tap: 'temple'", "ದೇವಸ್ಥಾನ", ["ದೇವಸ್ಥಾನ", "ಶಾಲೆ", "ಆಸ್ಪತ್ರೆ", "ಅಂಗಡಿ"]),
+                    ("type_answer", "Translate: 'shop'", "ಅಂಗಡಿ", []),
+                    ("mcq", "What is 'ನದಿ'?", "river", ["river", "mountain", "forest", "city"]),
+                ]]),
+            ]),
+        ],
+    },
+    "Tulu": {
+        "flag": "🇮🇳",
+        "units": [
+            ("Basics", "#58CC02", [
+                ("Greetings", "👋", [[
+                    ("mcq", "What does 'ನಮಸ್ಕಾರ' mean in Tulu?", "Hello", ["Hello", "Goodbye", "Thank you", "Please"]),
+                    ("type_answer", "Translate: 'How are you?' in Tulu", "ಈರ್ ಎಂಚ ಉಲ್ಲೆರ್", []),
+                    ("mcq", "What does 'ಧನ್ಯವಾದೊ' mean?", "Thank you", ["Hello", "Goodbye", "Thank you", "Please"]),
+                    ("fill_blank", "_____ (Yes in Tulu)", "ಔ", ["ಔ", "ಇಜ್ಜಿ", "ನಮಸ್ಕಾರ", "ಬಲೆ"]),
+                    ("translate", "Tap: 'No' in Tulu", "ಇಜ್ಜಿ", ["ಇಜ್ಜಿ", "ಔ", "ನಮಸ್ಕಾರ", "ಬಲೆ"]),
+                    ("mcq", "How do you say 'Come' in Tulu?", "ಬಲೆ", ["ಪೋಲೆ", "ಬಲೆ", "ಉಲ್ಲೆ", "ನಿಲ್ಲ"]),
+                    ("type_answer", "Translate: 'Good' in Tulu", "ಒಳ್ಳೆ", []),
+                ]]),
+                ("Numbers", "🔢", [[
+                    ("mcq", "What is 'ಒಂಜಿ' (onji) in Tulu?", "1", ["1", "2", "3", "4"]),
+                    ("mcq", "What is 'ರಡ್ಡ್' (radd) in Tulu?", "2", ["1", "2", "3", "4"]),
+                    ("type_answer", "Translate: 'three' in Tulu", "ಮೂಜಿ", []),
+                    ("fill_blank", "_____ (four in Tulu)", "ನಾಲ್", ["ನಾಲ್", "ಐನ್", "ಆಜಿ", "ಏಳ್"]),
+                    ("translate", "Tap: 'five' in Tulu", "ಐನ್", ["ಐನ್", "ಆಜಿ", "ಏಳ್", "ಎಂಟ್"]),
+                    ("mcq", "What is 'ಪತ್ತ್' in Tulu?", "10", ["7", "8", "9", "10"]),
+                    ("type_answer", "Translate: 'hundred' in Tulu", "ನೂರ್", []),
+                ]]),
+                ("Colors", "🎨", [[
+                    ("mcq", "What is 'ಕೆಂಪು ಬಣ್ಣ' in Tulu?", "red", ["red", "blue", "green", "yellow"]),
+                    ("type_answer", "Translate: 'blue' in Tulu", "ನೀಲಿ", []),
+                    ("fill_blank", "_____ (green in Tulu)", "ಪಚ್ಚೆ", ["ಪಚ್ಚೆ", "ಕೆಂಪು", "ನೀಲಿ", "ಮಂಜಲ್"]),
+                    ("mcq", "What is 'ಮಂಜಲ್' in Tulu?", "yellow", ["red", "blue", "green", "yellow"]),
+                    ("translate", "Tap: 'white' in Tulu", "ಬೊಳ್ಪು", ["ಬೊಳ್ಪು", "ಕಪ್ಪು", "ಕೆಂಪು", "ನೀಲಿ"]),
+                    ("type_answer", "Translate: 'black' in Tulu", "ಕಪ್ಪು", []),
+                    ("mcq", "What is 'ಕಿತ್ತಳೆ ಬಣ್ಣ' in Tulu?", "orange", ["purple", "orange", "pink", "brown"]),
+                ]]),
+            ]),
+            ("Family", "#CE82FF", [
+                ("Family Members", "👨👩👧", [[
+                    ("mcq", "What is 'ಅಮ್ಮೆ' in Tulu?", "mother", ["mother", "father", "sister", "brother"]),
+                    ("type_answer", "Translate: 'father' in Tulu", "ಅಪ್ಪೆ", []),
+                    ("fill_blank", "_____ (elder sister in Tulu)", "ಅಕ್ಕ", ["ಅಕ್ಕ", "ಅಣ್ಣ", "ಅಮ್ಮೆ", "ಅಪ್ಪೆ"]),
+                    ("mcq", "What is 'ಅಜ್ಜ' in Tulu?", "grandfather", ["grandmother", "grandfather", "uncle", "aunt"]),
+                    ("translate", "Tap: 'brother' in Tulu", "ಅಣ್ಣ", ["ಅಣ್ಣ", "ಅಕ್ಕ", "ಅಪ್ಪೆ", "ಅಮ್ಮೆ"]),
+                    ("type_answer", "Translate: 'grandmother' in Tulu", "ಅಜ್ಜಿ", []),
+                    ("mcq", "What is 'ದಾಯಾದಿ' in Tulu?", "cousin", ["uncle", "aunt", "cousin", "nephew"]),
+                ]]),
+            ]),
+        ],
+    },
     "German": {
         "flag": "🇩🇪",
         "units": [
